@@ -75,7 +75,7 @@ Fin des travaux : sous 6 mois à compter de la signature et de la réception de 
 function __unite(e,u){const s=__units(e);return s.includes(u)?u:s[0]}
 function __kwhF(e,u){return{L:10,kg:12.8}[__unite(e,u)]??1}
 const __ecsParPac=e=>/^souhait/i.test(e.ecsParPac||"");
-function __kwhCalc(e){const u=__unite(e.energie,e.consoUnite),f=__kwhF(e.energie,u),q=e.consoQuantite||0,kt=q*f,s=e.depenseAnnuelle,m=e.machine,p=e.emetteurs==="Plancher chauffant",regime=p?35:55,scop=(p?m.scop35:m.scop55)||0,prix=e.prixKwhElec||0,rd=e.rendementChaudiere>0?e.rendementChaudiere:null,sep=e.ecsProduction==="Par le chauffage principal"&&!__ecsParPac(e),ke=sep?Math.min((e.consoEcsQuantite||0)*f,kt):0;
+function __kwhCalc(e){const u=__unite(e.energie,e.consoUnite),f=__kwhF(e.energie,u),q=e.consoQuantite||0,kt=q*f,s=e.depenseAnnuelle,m=e.machine,p=e.emetteurs==="Plancher chauffant",regime=p?35:55,scop=(p?m.scop35:m.scop55)||0,prix=e.prixKwhElec||0,rd=e.rendementChaudiere>0?e.rendementChaudiere:null,sep=!1,ke=sep?Math.min((e.consoEcsQuantite||0)*f,kt):0;
 if(!(kt>0&&scop>0&&prix>0&&s>0))return{mode:"pct",manque:kt>0&&s>0?(scop>0?"prix":"scop"):"",regime,pacElec:s*(1-e.economie.gain/100),ecsKeep:0};
 const kB=kt-ke,kU=kB*(rd?rd/100:1),kE=kU/scop,pacElec=kE*prix,ecsKeep=s*ke/kt;
 return{mode:"kwh",unite:u,f,q,kt,ke,kB,rd,kU,scop,regime,kE,prix,pacElec,ecsKeep,integre:e.ecsProduction==="Par le chauffage principal"&&__ecsParPac(e)}}
@@ -90,8 +90,8 @@ C.jsx(FA,{label:"Dépense de chauffage par an",unit:"€",value:dep,onChange:v=>
 C.jsx(FA,{label:"Rendement de la chaudière",unit:"%",allowNull:!0,value:rd,onChange:setRd,help:"Facultatif. Par exemple 94 % : on retire 6 % des kWh consommés avant de diviser par le SCOP."}),
 C.jsx(WA,{label:"Eau chaude sanitaire",value:ep,options:["Par le chauffage principal","Ballon électrique","Chauffe-eau thermodynamique"],onChange:setEp,allowOther:!0}),
 C.jsx(WA,{label:"Eau chaude par la PAC",value:ex,options:["Souhaitée","Non souhaitée"],onChange:setEx}),parPac&&C.jsx(WA,{label:"Production d’eau chaude",value:et==="deporte"?"Ballon déporté (2 systèmes)":"Ballon intégré à la PAC (1 système)",options:["Ballon intégré à la PAC (1 système)","Ballon déporté (2 systèmes)"],onChange:v=>setEt(v.startsWith("Ballon déporté")?"deporte":"integre"),help:"Intégré : la PAC fait tout, comme la chaudière remplacée. Déporté : un chauffe-eau thermodynamique à part."}),parPac&&et==="deporte"&&C.jsx(WA,{label:"Ballon déporté",value:bd,options:["Atlantic Égéo 200 L (réf. 232516)","Atlantic Égéo 250 L (réf. 232517)","Aston 200 L (réf. ASTON200)","Aston 250 L (réf. ASTON250)"],onChange:setBd,allowOther:!0}),
-chp&&parPac&&C.jsx("p",{className:muted,children:"La PAC reprend le chauffage et l’eau chaude : toute la consommation passe par le SCOP, sans distinction de prix."}),
-chp&&!parPac&&C.jsx(FA,{label:"Dont eau chaude",unit:u,value:eq,onChange:v=>setEq(v??0),help:"Facultatif. Cette part reste sur l’énergie actuelle, puisque la PAC ne fait pas l’eau chaude."})]})}
+C.jsx("p",{className:muted,children:"Toute la consommation (chauffage et eau chaude) est calculée avec le SCOP de la PAC."}),
+!1&&C.jsx(FA,{label:"Dont eau chaude",unit:u,value:eq,onChange:v=>setEq(v??0),help:"Facultatif. Cette part reste sur l’énergie actuelle, puisque la PAC ne fait pas l’eau chaude."})]})}
 function __EcoKwh(){const e=Qe(V=>V.data),[pk,setPk]=nA("prixKwhElec"),[ec,setEc]=nA("economie"),k=__kwhCalc(e),muted="text-sm text-muted-foreground";
 return C.jsxs(C.Fragment,{children:[C.jsx(FA,{label:"Prix du kWh d’électricité TTC",unit:"€/kWh",value:pk,onChange:v=>setPk(v??0),help:"Tarif EDF Base : 0,2001 € (août 2026)."}),
 k.mode==="kwh"?C.jsx("p",{className:"rounded-md bg-muted p-3 text-sm",children:__kwhTxt(k,e.depenseAnnuelle)}):C.jsxs(C.Fragment,{children:[C.jsx(FA,{label:"Économie la 1re année",unit:"%",value:ec.gain,onChange:v=>setEc({...ec,gain:v??0})}),
