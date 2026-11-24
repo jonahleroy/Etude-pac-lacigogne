@@ -419,26 +419,17 @@ ${g}
   .closing-sig .esign b { color: #1e293b; }
 `;function VL(e,t){if(!I2(t.path))throw new pd("Tracé de signature invalide.");const s=e.indexOf(hd);if(s<0||e.indexOf(hd,s+1)>=0)throw new pd("Case de signature introuvable dans le rapport.");if(!e.includes("</head>"))throw new pd("Document HTML incomplet.");const r=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Ds} ${Ls}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Signature"><path d="${t.path}" fill="none" stroke="#1e2a4a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,l=`<div class="esign">Signé électroniquement par <b>${sA(t.signerName)}</b><br>le ${GL(t.signedAt)} (heure de Paris)</div>`;return(e.slice(0,s)+`<div class="zone zone--signed">${r}</div>${l}`+e.slice(s+hd.length)).replace("</head>",`<style>${jL}</style></head>`)}const md=794,ZL='<meta name="format-detection" content="telephone=no,email=no,address=no,date=no"><style>html{-webkit-text-size-adjust:100%;text-size-adjust:100%}a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important}</style>',JL=e=>e.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,""),YL=e=>`${(e/1e6).toFixed(1).replace(".",",")} Mo`;function qL({settings:e,onBack:t}){const s=Qe(F=>F.data),[r,l]=cA.useState(!!e.signature),[o,u]=cA.useState(()=>new Date),d=cA.useRef(null),B=cA.useRef(null),[g,p]=cA.useState({scale:1,height:0}),[m,w]=cA.useState({status:"idle"}),U=cA.useMemo(()=>{const F=ox(s,e.profile).replace("<head>",`<head>${ZL}`);return!r||!e.signature?F:VL(F,{...e.signature,signedAt:o})},[s,e,r,o]),E=()=>{const F=d.current?.contentDocument,D=B.current?.clientWidth??md;F&&p({scale:Math.min(1,D/md),height:F.documentElement.scrollHeight})};cA.useEffect(()=>(window.addEventListener("resize",E),()=>window.removeEventListener("resize",E)),[]),cA.useEffect(()=>w({status:"idle"}),[U]),cA.useEffect(()=>()=>m.status==="ready"?URL.revokeObjectURL(m.url):void 0,[m]);const y=async()=>{const F=d.current?.contentDocument;if(F)try{const D=["Etude-PAC",JL(s.nom.trim()?kr(s):""),s.refEtude].filter(Boolean).join("-"),G=await kL(F,`Étude énergétique · ${kr(s)}`,(j,Z)=>w({status:"rendering",done:j,total:Z})),V=new File([G],`${D}.pdf`,{type:"application/pdf"});w({status:"ready",file:V,url:URL.createObjectURL(V)})}catch(D){w({status:"error",message:D instanceof Error?D.message:"PDF impossible."})}},x=async(F,D)=>{if(navigator.canShare?.({files:[F]})){await navigator.share({files:[F]}).catch(()=>{});return}Object.assign(document.createElement("a"),{href:D,download:F.name}).click()};return C.jsxs(C.Fragment,{children:[C.jsx(Xo,{title:"Aperçu de l’étude",onBack:t,backLabel:"Saisie"}),C.jsxs("div",{className:"mx-auto w-full max-w-4xl px-4 pb-28 pt-4",children:[e.signature&&C.jsxs("label",{className:"mb-3 flex min-h-11 items-center gap-3 text-base font-semibold",children:[C.jsx("input",{type:"checkbox",checked:r,onChange:F=>{u(new Date),l(F.target.checked)},className:"size-5"}),"Signer pour l’entreprise (",e.signature.signerName||"signature enregistrée",")"]}),C.jsx("div",{ref:B,style:{height:g.height*g.scale},className:"relative overflow-hidden",children:C.jsx("iframe",{ref:d,title:"Étude",srcDoc:U,onLoad:E,style:{width:md,height:g.height||1123,transform:`scale(${g.scale})`,transformOrigin:"top left",border:0,background:"#fff"}})})]}),C.jsx("footer",{className:"fixed inset-x-0 bottom-0 z-40 border-t border-border bg-[var(--ep-surface)] pb-[env(safe-area-inset-bottom)]",children:C.jsxs("div",{className:"mx-auto flex w-full max-w-2xl flex-col gap-2 px-4 py-2.5",children:[m.status==="ready"?C.jsxs(C.Fragment,{children:[C.jsxs(YA,{className:"min-h-12 w-full",onClick:()=>{x(m.file,m.url)},children:["Partager le PDF (",YL(m.file.size),")"]}),C.jsx("a",{href:m.url,target:"_blank",rel:"noreferrer",className:"text-center text-sm underline",children:"Ouvrir le PDF"})]}):C.jsx(YA,{className:"min-h-12 w-full",disabled:m.status==="rendering",onClick:()=>{y()},children:m.status==="rendering"?`Préparation du PDF… page ${Math.min(m.done+1,m.total)} sur ${m.total}`:"Préparer le PDF"}),m.status==="error"&&C.jsx("p",{role:"alert",className:"text-sm text-destructive",children:m.message})]})})]})}const WL=`
 body:has([data-etude-pac]),[data-etude-pac]{
-  --ep-fond:#F4F6F1; --ep-surface:#FFFFFF; --ep-encre:#010A12; --ep-texte:#1B2530; --ep-discret:#5D646B;
-  --ep-filet:#D8DED1; --ep-accent:#61CE70; --ep-accent-fonce:#2F5D22; --ep-accent-pale:#E3F2DC;
-  --ep-alerte:#9A5B00; --ep-erreur:#B03A2E; --ep-bandeau:#2F5D22; --ep-bandeau-texte:#FFFFFF;
+  --ep-fond:#05090D; --ep-surface:#11161B; --ep-encre:#F2F5EF; --ep-texte:#DCE2D8; --ep-discret:#A0A8A2;
+  --ep-filet:#2A323A; --ep-accent:#61CE70; --ep-accent-fonce:#7FDD8C; --ep-accent-pale:#1A3320;
+  --ep-alerte:#E8B65E; --ep-erreur:#F08A7C; --ep-bandeau:#010A12; --ep-bandeau-texte:#FFFFFF;
   --background:var(--ep-surface); --foreground:var(--ep-encre); --card:var(--ep-surface);
-  --card-foreground:var(--ep-encre); --muted:#EDF0E9; --muted-foreground:var(--ep-discret);
-  --border:var(--ep-filet); --input:#B9C1B3; --primary:var(--ep-accent-fonce); --primary-foreground:#FFFFFF;
-  --ring:var(--ep-accent-fonce); --destructive:var(--ep-erreur);
-  color-scheme:light;
+  --card-foreground:var(--ep-encre); --muted:#1A2026; --muted-foreground:var(--ep-discret);
+  --border:var(--ep-filet); --input:#3A444C; --primary:#61CE70; --primary-foreground:#010A12;
+  --ring:#61CE70; --destructive:var(--ep-erreur);
+  color-scheme:dark;
   background:var(--ep-fond); color:var(--ep-texte);
 }
-@media (prefers-color-scheme: dark){
-  body:has([data-etude-pac]),[data-etude-pac]{
-    --ep-fond:#101418; --ep-surface:#171C21; --ep-encre:#ECEFE9; --ep-texte:#D9DED6; --ep-discret:#A3ABA5;
-    --ep-filet:#2C343B; --ep-accent:#8CCB93; --ep-accent-fonce:#A9DBA9; --ep-accent-pale:#22352A;
-    --ep-alerte:#E2B25C; --ep-erreur:#EE8E80; --ep-bandeau:#1D3A16; --ep-bandeau-texte:#ECEFE9;
-    --muted:#1E252B; --input:#3A444C; --primary:#8CCB93; --primary-foreground:#101418;
-    color-scheme:dark;
-  }
-}
-[data-etude-pac] header{border-bottom:4px solid #61CE70}
+[data-etude-pac] header{border-bottom:3px solid #61CE70}
 [data-etude-pac] :focus-visible{outline:2px solid var(--ring);outline-offset:2px}
 @media (prefers-reduced-motion: reduce){
   [data-etude-pac] *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
