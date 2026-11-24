@@ -1,6 +1,6 @@
 // Généré par scripts/precache.mjs : ne pas modifier à la main.
-const CACHE = 'etude-pac-5ee10e8ee513'
-const URLS = ["./","./assets/index-XuEOjuUT.js","./assets/index-BNvm00jM.css","./icon-180.png","./icon-192.png","./icon-512.png","./index.html","./manifest.webmanifest"]
+const CACHE = 'etude-pac-fe77045154b9'
+const URLS = ["./","./assets/index-_ncEUVS5.js","./assets/index-BNvm00jM.css","./icon-180.png","./icon-192.png","./icon-512.png","./index.html","./manifest.webmanifest"]
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(URLS)).then(() => self.skipWaiting()))
